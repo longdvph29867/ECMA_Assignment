@@ -1,3 +1,5 @@
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 import { useEffect, useState } from "../../lib";
 
 export default function Dasboard() {
@@ -33,8 +35,9 @@ export default function Dasboard() {
 
 
   return /*html*/ `
+  ${Header()}
   <div class="container mx-auto">
-    <h1 class="text-center text-3xl py-5">Quản lý sách</h1>
+    <h1 class="text-center text-3xl py-5 text-[#4e73df]">Quản lý sách</h1>
     <div>
       <a href="/admin/create" class="inline-block py-2 px-5 mb-2 text-base bg-[#1cc88a] hover:bg-green-500 duration-300 text-white rounded">Add new book</a>
     </div>
@@ -88,5 +91,7 @@ export default function Dasboard() {
       </table>
     </div>
   </div>
+  ${Footer()}
+
   `;
 }

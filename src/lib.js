@@ -107,6 +107,7 @@ router.on("/*", () => {}, {
     },
 });
 
+// validation
 const required = (value, errorId) => {
     const errorEl = document.getElementById(errorId)
     if(value.length === 0) {
@@ -119,4 +120,32 @@ const required = (value, errorId) => {
     }
 }
 
-export { render, useState, useEffect, router, required};
+const valiFiles = (files, errorId) => {
+    const allowedTypes = ['image/png', 'image/jpg', 'image/webp', 'image/jpeg'];
+    const maxSize = 1 * 1024 * 1024;
+    const errorFile = document.getElementById(errorId);
+
+    if(files.length !== 0) {
+        for(let i = 0; i < files.length; i++) {
+            const file = files[0];
+            if(!allowedTypes.includes(file.type)) {
+                errorFile.innerText = 'File Phải có định dạng (png, jpg, jpeg, webp)'
+                return false;
+            }
+            else if (file.size > maxSize) {
+                errorFile.innerText = 'File tối đa 2MB'
+                return false;
+            }
+            else {
+                errorFile.innerText = "";
+                return true;
+            }
+        }
+    }
+    else {
+        errorFile.innerText = 'Vui lòng chọn file!'
+        return false
+    }
+}
+
+export { render, useState, useEffect, router, required, valiFiles};
