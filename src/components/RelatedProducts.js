@@ -1,8 +1,21 @@
 import ProductItem from "./ProductItem";
-import { books } from '../db.json' assert { typeof: 'json'} 
+import { useEffect, useState } from "../lib";
 
 export default function RelatedProducts(isId) {
-    console.log("🚀 ~ file: RelatedProducts.js:5 ~ RelatedProducts ~ isId:", isId)
+    const [books, setBooks] = useState([]);
+    useEffect(() => {
+        fetch(`http://localhost:3000/books`)
+        .then((res) => {
+            return res.json()
+        })
+        .then((data) => {
+            setBooks(data)
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }, [])
+    
     return /*html */ `
         <div class="container mx-auto">
             <h2 class="mb-6 text-xl text-[#333]">Sản Phẩm Tương Tự</h2>

@@ -1,11 +1,43 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import RelatedProducts from "../components/RelatedProducts";
-import { books } from '../db.json' assert { typeof: 'json'} 
+import { useEffect, useState } from "../lib";
 
 
 export default function DetailPage(id) {
-    let [book] = books.filter( item => id==item.id);
+    // let [book] = books.filter( item => id==item.id);
+    const [book, setBook] = useState({});
+    const [showDescription, setShowDescription] = useState(false);
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/books/${id}`)
+        .then((res) => {
+            return res.json()
+        })
+        .then((data) => {
+        setBook(data)
+        })
+        .catch((err) => {
+        console.log(err);
+        });
+    }, [])
+
+    useEffect(() => {
+        const listThumbnail = document.querySelectorAll(".thumbnail")
+        listThumbnail.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function () {
+                listThumbnail.forEach(thumbnail => {
+                    thumbnail.classList.remove('border-[#0D5CB6]')
+                })
+                document.querySelector('.image-detail').src = thumbnail.dataset.src
+                this.classList.add('border-[#0D5CB6]')
+            })
+        })
+        const handleShowDescription = () => {
+            setShowDescription(!showDescription)
+        }
+        document.querySelector('.btn-description').addEventListener('click', handleShowDescription)
+    })
 
   return /* html*/ `
     ${Header()}
@@ -13,8 +45,8 @@ export default function DetailPage(id) {
     <div class="container mx-auto flex">
         <div class="w-2/5 pr-4 pt-4">
             <div class="relative">
-                <div class="max-w-[445px] mx-auto">
-                    <img src="${book.images[0]}" alt="" />
+                <div class="max-w-[445px] min-h-[445px] mx-auto flex items-center">
+                    <img class='image-detail' src="${book.images?.[0]}" alt="" />
                 </div>
                 <div class="absolute left-4 bottom-4 flex gap-1 text-sm text-white py-1.5 px-3 rounded-full bg-black/50">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
@@ -24,9 +56,9 @@ export default function DetailPage(id) {
                 </div>
             </div>
             <div class="flex gap-3 mb-10 mt-4">
-                ${book.images.map((image, i) => {
+                ${book.images?.map((image, i) => {
                     return `
-                    <div class="border ${i === 0 ? 'border-[#0D5CB6]' : ''} rounded overflow-hidden">
+                    <div data-src="${image}" class="thumbnail border ${i === 0 ? 'border-[#0D5CB6]' : ''} rounded overflow-hidden">
                         <img src="${image}" width=64 alt="" />
                     </div>
                     `
@@ -51,8 +83,8 @@ export default function DetailPage(id) {
                 </div>
                 <div class="py-3 px-4 rounded bg-[#FAFAFA] h-24">
                     <div class=" flex items-end gap-2">
-                        <p class="text-[#FF424E] text-3xl leading-8">${book.list_price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
-                        <p class="text-[#808089] text-sm">${book.original_price.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+                        <p class="text-[#FF424E] text-3xl leading-8">${book.list_price?.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
+                        <p class="text-[#808089] text-sm">${book.original_price?.toLocaleString('vi', {style : 'currency', currency : 'VND'})}</p>
                         <div class="text-[14px] text-[#FF424E] rounded-sm border-[1px] border-[#FF424E] bg-[#FFF0F1] leading-3 p-[1px] ml-1.5">-<span>0</span>%</div>
                     </div>
                 </div>
@@ -77,26 +109,13 @@ export default function DetailPage(id) {
         <h3 class="text-xl text-[#333] mb-3">Mô Tả Sản Phẩm</h3>
         <div class=" max-w-4xl text-sm text-[#242424]">
             <div class="short_description space-y-5">
-                ${book.short_description}
-            </div>
-            <div class="description space-y-5 hidden">
-                ${book.description}
+                ${showDescription ? book.description : book.short_description}
             </div>
             
             <div class="flex justify-center mt-2">
-                <button onclick="(() => {
-                    const descriptionEl = document.querySelector('.description')
-                    const short_description = document.querySelector('.short_description')
-                    const show_description = document.querySelector('.show_description')
-                    const hidden_description = document.querySelector('.hidden_description')
-                    descriptionEl.classList.toggle('hidden')
-                    short_description.classList.toggle('hidden')
-
-                    show_description.classList.toggle('hidden')
-                    hidden_description.classList.toggle('hidden')
-
-                    
-                })()" class="text-[#189EFF] text-sm w-72 h-10 border border-[#189EFF] rounded"><span class="show_description">Xem Thêm Nội Dung</span><span class="hidden_description hidden">Rút gọn</span></button>
+                <button 
+                
+                    class="btn-description text-[#189EFF] text-sm w-72 h-10 border border-[#189EFF] rounded"><span class="show_description">${showDescription ? 'Rút gọn' : 'Xem Thêm Nội Dung'}</span></button>
             </div>
         </div>
     </div>

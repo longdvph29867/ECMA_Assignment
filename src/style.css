@@ -35,7 +35,8 @@ body {
     left:0;
     content: '★★★★★';
     width: 0;
-    color: #ff8c00;
+    color: #fec71f;
+    /* color: #ff8c00; */
     overflow:hidden;
     height:100%;
   }
