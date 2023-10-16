@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ListProducts from "../components/ListProduct";
 import Menu from "../components/Menu";
+import Spinner from "../components/Spinner";
 import Tabs from "../components/Tabs";
 
 export default function HomePage() {
@@ -20,5 +21,6 @@ export default function HomePage() {
       </div>
     </div>
     ${Footer()}
+    ${Spinner()}
   `
 }

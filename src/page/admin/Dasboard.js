@@ -1,14 +1,19 @@
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { useEffect, useState } from "../../lib";
+import Spinner from "../../components/Spinner";
+import { showSpinner, useEffect, useState } from "../../lib";
 
 export default function Dasboard() {
   const [books, setBooks] = useState([]);
 
   const fetchBooks = () => {
+    showSpinner()
     fetch('http://localhost:3000/books')
     .then(res => res.json())
-    .then(data => setBooks(data))
+    .then(data => {
+      showSpinner()
+      setBooks(data)
+    })
   }
 
   useEffect(() => {
@@ -80,7 +85,7 @@ export default function Dasboard() {
                 ${book.short_description}
               </td>
               <td class="px-6 py-4 space-x-2">
-                <a href="#" class="py-2 px-5 text-base inline-block bg-[#f6c23e] hover:bg-yellow-400 duration-300 text-white rounded">Edit</a>
+                <a href="/edit/${book.id}" class="py-2 px-5 text-base inline-block bg-[#f6c23e] hover:bg-yellow-400 duration-300 text-white rounded">Edit</a>
                 <button data-id="${book.id}" class="btn-delete py-2 px-5 text-base bg-[#e74a3b] hover:bg-red-600 duration-300 text-white rounded">Delete</button>
               </td>
           </tr>
@@ -92,6 +97,7 @@ export default function Dasboard() {
     </div>
   </div>
   ${Footer()}
-
+  ${Spinner()}
+  
   `;
 }

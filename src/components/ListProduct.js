@@ -1,19 +1,22 @@
 import { listProducts } from "../data";
-import { useEffect, useState } from "../lib";
+import { hiddenSpinner, showSpinner, useEffect, useState } from "../lib";
 import ProductItem from "./ProductItem";
 // import { books } from '../db.json' assert { typeof: 'json'} 
 export default function ListProducts() {
   const [books, setBooks] = useState([]);
     useEffect(() => {
+        showSpinner();
         fetch(`http://localhost:3000/books`)
         .then((res) => {
-            return res.json()
+          return res.json()
         })
         .then((data) => {
-            setBooks(data)
+          hiddenSpinner();
+          setBooks(data)
         })
         .catch((err) => {
-            console.log(err);
+          hiddenSpinner()
+          console.log(err);
         });
     }, [])
     return /*html*/`

@@ -1,5 +1,5 @@
 import Navigo from "navigo";
-const router = new Navigo("/", { linksSelector: "a", hash: false });
+const router = new Navigo("/", { linksSelector: "a", hash: true });
 
 let effects = [];
 let currentEffectOrder = 0;
@@ -125,7 +125,7 @@ const valiFiles = (files, errorId) => {
     const maxSize = 1 * 1024 * 1024;
     const errorFile = document.getElementById(errorId);
 
-    if(files.length !== 0) {
+    if(files.length !== 0 && files.length <= 5) {
         for(let i = 0; i < files.length; i++) {
             const file = files[0];
             if(!allowedTypes.includes(file.type)) {
@@ -133,7 +133,7 @@ const valiFiles = (files, errorId) => {
                 return false;
             }
             else if (file.size > maxSize) {
-                errorFile.innerText = 'File tối đa 2MB'
+                errorFile.innerText = 'File tối đa 1MB'
                 return false;
             }
             else {
@@ -142,10 +142,21 @@ const valiFiles = (files, errorId) => {
             }
         }
     }
+    else if(files.length > 5) {
+        errorFile.innerText = 'Tối đa 5 file!'
+        return false
+    }
     else {
         errorFile.innerText = 'Vui lòng chọn file!'
         return false
     }
 }
 
-export { render, useState, useEffect, router, required, valiFiles};
+const showSpinner = () => {
+    document.getElementById('spinner').style.display = 'block';
+}
+const hiddenSpinner = () => {
+    document.getElementById('spinner').style.display = 'none';
+}
+
+export { render, useState, useEffect, router, required, valiFiles, showSpinner, hiddenSpinner};

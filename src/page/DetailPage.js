@@ -1,23 +1,35 @@
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import RelatedProducts from "../components/RelatedProducts";
-import { useEffect, useState } from "../lib";
+import Spinner from "../components/Spinner";
+import { hiddenSpinner, showSpinner, useEffect, useState } from "../lib";
 
 
 export default function DetailPage(id) {
     // let [book] = books.filter( item => id==item.id);
     const [book, setBook] = useState({});
     const [showDescription, setShowDescription] = useState(false);
+    const [quantity, setQuantity] = useState(1)
+    const handleQuantity = (num) => {
+
+        setQuantity(quantity + num);
+    }
+    const handleShowDescription = () => {
+        setShowDescription(!showDescription)
+    }
 
     useEffect(() => {
+        showSpinner();
         fetch(`http://localhost:3000/books/${id}`)
         .then((res) => {
             return res.json()
         })
         .then((data) => {
-        setBook(data)
+            hiddenSpinner();
+            setBook(data)
         })
         .catch((err) => {
+            hiddenSpinner();
         console.log(err);
         });
     }, [])
@@ -33,10 +45,10 @@ export default function DetailPage(id) {
                 this.classList.add('border-[#0D5CB6]')
             })
         })
-        const handleShowDescription = () => {
-            setShowDescription(!showDescription)
-        }
+
         document.querySelector('.btn-description').addEventListener('click', handleShowDescription)
+        document.querySelector('.down').addEventListener('click', () => handleQuantity(-1))
+        document.querySelector('.up').addEventListener('click', () => handleQuantity(1))
     })
 
   return /* html*/ `
@@ -92,9 +104,9 @@ export default function DetailPage(id) {
                 <div>
                     <p>Số Lượng</p>
                     <div class="flex items-center gap-[2px] mt-2">
-                        <span class="w-8 h-8 text-[#787878] text-2xl flex items-center justify-center border border-[#ECECEC] border-r-0">-</span>
-                        <span class="w-10 h-7 flex items-center justify-center border border-[#ECECEC]">01</span>
-                        <span class="w-8 h-8 text-[#787878] text-2xl flex items-center justify-center border border-[#ECECEC] border-l-0">+</span>
+                        <button class="down w-8 h-8 text-[#787878] text-2xl flex items-center justify-center border border-[#ECECEC] border-r-0">-</button>
+                        <span class="w-10 h-7 flex items-center justify-center border border-[#ECECEC]">${quantity}</span>
+                        <button class="up w-8 h-8 text-[#787878] text-2xl flex items-center justify-center border border-[#ECECEC] border-l-0">+</button>
                     </div>
                 </div>
                 <button class="w-80 h-12 bg-[#FF3945] rounded text-white text-sm mt-7">Chọn mua</button>
@@ -121,5 +133,6 @@ export default function DetailPage(id) {
     </div>
 
     ${Footer()}
+    ${Spinner()}
   `;
 }

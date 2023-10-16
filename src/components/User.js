@@ -7,7 +7,7 @@ export default function User() {
           <a href="#">Đăng Nhập</a> / <a href="#">Đăng Ký</a>
         </p>
         <a href="/admin" class="flex items-center">
-          <span class="text-sm">Tài khoản</span>
+          <span class="text-sm">Quản trị</span>
           <img src="/down.svg" alt="" />
         </a>
       </div>
