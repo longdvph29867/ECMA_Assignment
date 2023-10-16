@@ -11,7 +11,9 @@ export default function DetailPage(id) {
     const [showDescription, setShowDescription] = useState(false);
     const [quantity, setQuantity] = useState(1)
     const handleQuantity = (num) => {
-
+        if(quantity === 1 && num < 0) {
+            return;
+        }
         setQuantity(quantity + num);
     }
     const handleShowDescription = () => {
